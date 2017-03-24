@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "197700827511",
+    "firebase_url": "https://cunavigator-48b73.firebaseio.com",
+    "project_id": "cunavigator-48b73",
+    "storage_bucket": "cunavigator-48b73.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197700827511:android:b0b38974469a293c",
+        "android_client_info": {
+          "package_name": "xyz.digzdigital.cunavigator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "197700827511-lvocueurp4n76ab2pq47v4qtrrvb0qak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xyz.digzdigital.cunavigator",
+            "certificate_hash": "187587744445049121cd490196ccd992d8c3bbe7"
+          }
+        },
+        {
+          "client_id": "197700827511-cc20jde6nc97l5lbiek0ilvpqllj81tv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZet-FTicmq4g_YjaXujrlG1xwN3Tijlo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "197700827511-cc20jde6nc97l5lbiek0ilvpqllj81tv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
