@@ -10,18 +10,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="xyz.digzdigital.cunavigator.MainActivity">
+    tools:context="xyz.digzdigital.cunavigator.mapbox.MainActivity">
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapview"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         mapbox:style_url=""
-        mapbox:mapbox_cameraTargetLat="6.671307"
-        mapbox:mapbox_cameraTargetLng="3.158210"
-        mapbox:mapbox_cameraTilt="20"
-        mapbox:mapbox_cameraZoom="14"/>
+        />
 
     <LinearLayout
         android:id="@+id/originLayout"

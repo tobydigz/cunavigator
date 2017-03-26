@@ -1,4 +1,4 @@
-package xyz.digzdigital.cunavigator;
+package xyz.digzdigital.cunavigator.mapbox;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
@@ -20,6 +20,8 @@ import com.mapbox.mapboxsdk.annotations.MarkerView;
 import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.annotations.Polyline;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
@@ -38,6 +40,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import xyz.digzdigital.cunavigator.R;
 import xyz.digzdigital.cunavigator.navigator.Place;
 import xyz.digzdigital.cunavigator.navigator.Router;
 
@@ -79,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         routeButton = (Button) findViewById(R.id.route);
         routeButton.setOnClickListener(this);
 
-        mapView.setStyle(Style.SATELLITE_STREETS);
+        mapView.setStyle(Style.LIGHT);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
@@ -134,6 +137,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
+
+        CameraPosition position = new CameraPosition.Builder()
+                .target(new LatLng(6.671307, 3.158210)) // Sets the new camera position
+                .zoom(16) // Sets the zoom
+                // .bearing(180) // Rotate the camera
+                // .tilt(30) // Set the camera tilt
+                .build(); // Creates a CameraPosition from the builder
+        mapboxMap.animateCamera(CameraUpdateFactory
+                .newCameraPosition(position), 1000);
         OfflineManager offlineManager = OfflineManager.getInstance(this);
 
         LatLngBounds latLngBounds = createBounds();
@@ -177,7 +189,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void addOriginMarker(Place place) {
-        if (originMarker != null) updateOriginMarkerPosition(place);
+        if (originMarker != null) {
+            updateOriginMarkerPosition(place);
+            return;
+        }
         MarkerViewOptions markerViewOptions = new MarkerViewOptions()
                 .position(new LatLng(place.latitude(), place.longitude()))
                 .title("Origin: " + place.placeName());
@@ -190,7 +205,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void addDestinationMarker(Place place) {
-        if (destinationMarker != null) updateDestinationMarkerPosition(place);
+        if (destinationMarker != null){
+            updateDestinationMarkerPosition(place);
+            return;
+        }
         MarkerViewOptions markerViewOptions = new MarkerViewOptions()
                 .position(new LatLng(place.latitude(), place.longitude()))
                 .title("Destination: " + place.placeName());

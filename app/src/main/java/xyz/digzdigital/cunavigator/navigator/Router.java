@@ -1,6 +1,7 @@
 package xyz.digzdigital.cunavigator.navigator;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 
 import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
@@ -90,9 +91,10 @@ public class Router {
         roadManager = new GraphHopperRoadManager("7bbb6502-eb6c-49c9-92d1-7077796fd104", false);
         ArrayList<GeoPoint> geoPoints = new ArrayList<>();
         geoPoints.add(new GeoPoint(origin.latitude(), origin.longitude()));
-        Road road = roadManager.getRoad(geoPoints);
-        Polyline polyline = RoadManager.buildRoadOverlay(road);
-        computeRoute(polyline);
+
+        GetRoadData task = new GetRoadData();
+        task.execute(geoPoints);
+
     }
 
     private void computeRoute(Polyline polyline) {
@@ -115,5 +117,20 @@ public class Router {
         void onComplete(List<double[]> points);
 
         void onError();
+    }
+
+    private class GetRoadData extends AsyncTask<ArrayList<GeoPoint>, Void, Road>{
+
+        @Override
+        protected Road doInBackground(ArrayList<GeoPoint>... params) {
+            ArrayList<GeoPoint> geoPoints = params[0];
+            return roadManager.getRoad(geoPoints);
+        }
+
+        @Override
+        protected void onPostExecute(Road road){
+            Polyline polyline = RoadManager.buildRoadOverlay(road);
+            computeRoute(polyline);
+        }
     }
 }

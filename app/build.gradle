@@ -41,6 +41,25 @@ dependencies {
     compile 'com.google.firebase:firebase-storage:10.0.1'
     compile 'com.google.firebase:firebase-auth:10.0.1'
     testCompile 'junit:junit:4.12'
+
+    compile(group: 'com.graphhopper', name: 'graphhopper-core', version: '0.9-SNAPSHOT') {
+        exclude group: 'com.google.protobuf', module: 'protobuf-java'
+        exclude group: 'org.openstreetmap.osmosis', module: 'osmosis-osm-binary'
+        exclude group: 'org.apache.xmlgraphics', module: 'xmlgraphics-commons'
+    }
+
+    compile 'org.mapsforge:vtm:0.7.0'
+    compile 'org.mapsforge:vtm-android:0.7.0'
+    compile 'org.mapsforge:vtm-android:0.7.0:natives-armeabi'
+    compile 'org.mapsforge:vtm-android:0.7.0:natives-armeabi-v7a'
+    compile 'org.mapsforge:vtm-android:0.7.0:natives-x86'
+    compile 'org.mapsforge:vtm-jts:0.7.0'
+    compile 'org.mapsforge:vtm-themes:0.7.0'
+    compile 'com.caverock:androidsvg:1.2.2-beta-1'
+    compile 'com.vividsolutions:jts-core:1.14.0'
+
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'org.slf4j:slf4j-android:1.7.21'
 }
 
 

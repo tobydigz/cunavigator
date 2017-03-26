@@ -15,16 +15,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".mapbox.MainActivity">
+
+        </activity>
+        <activity android:name=".graphhopper.NavigationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".NavigationActivity">
-        </activity>
-        <activity android:name=".MapDownloadActivity">
+        <activity android:name=".graphhopper.MapDownloadActivity">
         </activity>
         <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService"/>
     </application>
