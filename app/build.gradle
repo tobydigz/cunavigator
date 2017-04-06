@@ -29,18 +29,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:4.2.2@aar') {
-        transitive = true
-    }
 
-
-    compile 'com.android.support:appcompat-v7:25.3.0'
-    compile 'org.osmdroid:osmdroid-android:5.6.4'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
-    compile 'com.github.MKergall:osmbonuspack:6.3'
-    compile 'com.google.firebase:firebase-storage:10.0.1'
-    compile 'com.google.firebase:firebase-auth:10.0.1'
-    testCompile 'junit:junit:4.12'
 
     compile(group: 'com.graphhopper', name: 'graphhopper-core', version: '0.9-SNAPSHOT') {
         exclude group: 'com.google.protobuf', module: 'protobuf-java'
@@ -48,19 +37,31 @@ dependencies {
         exclude group: 'org.apache.xmlgraphics', module: 'xmlgraphics-commons'
     }
 
-    compile 'org.mapsforge:vtm:0.7.0'
-    compile 'org.mapsforge:vtm-android:0.7.0'
     compile 'org.mapsforge:vtm-android:0.7.0:natives-armeabi'
     compile 'org.mapsforge:vtm-android:0.7.0:natives-armeabi-v7a'
     compile 'org.mapsforge:vtm-android:0.7.0:natives-x86'
+
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:cardview-v7:25.3.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+    compile 'com.google.firebase:firebase-storage:10.2.0'
+    compile 'com.google.firebase:firebase-auth:10.2.0'
+    compile 'org.mapsforge:vtm:0.7.0'
+    compile 'org.mapsforge:vtm-android:0.7.0'
     compile 'org.mapsforge:vtm-jts:0.7.0'
     compile 'org.mapsforge:vtm-themes:0.7.0'
     compile 'com.caverock:androidsvg:1.2.2-beta-1'
     compile 'com.vividsolutions:jts-core:1.14.0'
-
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile 'org.slf4j:slf4j-android:1.7.21'
+    compile 'com.google.android.gms:play-services-maps:10.2.0'
+    compile 'com.google.android.gms:play-services-places:10.2.0'
+    compile 'com.google.android.gms:play-services-location:10.2.0'
+    compile 'com.github.jd-alexander:library:1.1.0'
+    testCompile 'junit:junit:4.12'
 }
+
+
 
 
 

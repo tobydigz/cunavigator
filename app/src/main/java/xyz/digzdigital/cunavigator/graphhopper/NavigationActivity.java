@@ -1,8 +1,5 @@
 package xyz.digzdigital.cunavigator.graphhopper;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Path;
@@ -10,16 +7,20 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,13 +67,14 @@ import java.util.TreeMap;
 
 import xyz.digzdigital.cunavigator.R;
 import xyz.digzdigital.cunavigator.navigator.Place;
+import xyz.digzdigital.cunavigator.navigator.Router;
 
+import static android.view.View.GONE;
 import static xyz.digzdigital.cunavigator.navigator.Place.CHAPEL;
 
 public class NavigationActivity extends AppCompatActivity {
-    GeoPoint startPoint = new GeoPoint(CHAPEL.latitude(), CHAPEL.longitude());
-
     private static final int NEW_MENU_ID = Menu.FIRST + 1;
+    GeoPoint startPoint = new GeoPoint(CHAPEL.latitude(), CHAPEL.longitude());
     private MapView mapView;
     private GraphHopper hopper;
     private GeoPoint start;
@@ -90,6 +92,10 @@ public class NavigationActivity extends AppCompatActivity {
     private File mapsFolder;
     private ItemizedLayer<MarkerItem> itemizedLayer;
     private PathLayer pathLayer;
+    private LinearLayout loadMapLayout, routeLayout;
+    private Router router = new Router();
+    private Spinner startSpinner, endSpinner;
+    private Button routeButton;
 
     protected boolean onLongPress(GeoPoint p) {
         if (!isReady())
@@ -111,6 +117,40 @@ public class NavigationActivity extends AppCompatActivity {
         } else {
             start = p;
             end = null;
+            logUser(start.getLatitude() + "  " + start.getLongitude());
+
+            // remove routing layers
+            mapView.map().layers().remove(pathLayer);
+            itemizedLayer.removeAllItems();
+
+            itemizedLayer.addItem(createMarkerItem(start, R.mipmap.marker_icon_green));
+            mapView.map().updateMap(true);
+        }
+        return true;
+    }
+
+    protected boolean onLongPress(GeoPoint p, boolean isStart) {
+        if (!isReady())
+            return false;
+
+        if (shortestPathRunning) {
+            logUser("Calculation still in progress");
+            return false;
+        }
+
+        if (!isStart) {
+            end = p;
+            shortestPathRunning = true;
+            itemizedLayer.addItem(createMarkerItem(p, R.mipmap.marker_icon_red));
+            mapView.map().updateMap(true);
+
+            calcPath(start.getLatitude(), start.getLongitude(), end.getLatitude(),
+                    end.getLongitude());
+        } else {
+            start = p;
+            end = null;
+            logUser(start.getLatitude() + "  " + start.getLongitude());
+
             // remove routing layers
             mapView.map().layers().remove(pathLayer);
             itemizedLayer.removeAllItems();
@@ -128,7 +168,13 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
 
         Tile.SIZE = Tile.calculateTileSize(getResources().getDisplayMetrics().scaledDensity);
-        mapView = new MapView(this);
+        mapView = (MapView) findViewById(R.id.mapView);
+        startSpinner = (Spinner) findViewById(R.id.startSpinner);
+        endSpinner = (Spinner) findViewById(R.id.endSpinner);
+        routeButton = (Button) findViewById(R.id.route_button);
+
+        loadMapLayout = (LinearLayout) findViewById(R.id.settings_layout);
+        routeLayout = (LinearLayout) findViewById(R.id.route_layout);
 
         final EditText input = new EditText(this);
         input.setText(currentArea);
@@ -375,11 +421,81 @@ public class NavigationActivity extends AppCompatActivity {
         mapView.map().layers().add(itemizedLayer);
 
         // Map position
-        GeoPoint mapCenter = tileSource.getMapInfo().boundingBox.getCenterPoint();
+        // GeoPoint mapCenter = tileSource.getMapInfo().boundingBox.getCenterPoint();
         mapView.map().setMapPosition(Place.CHAPEL.latitude(), Place.CHAPEL.latitude(), 1 << 15);
 
-        setContentView(mapView);
+        // setContentView(mapView);
         loadGraphStorage();
+        loadMapLayout.setVisibility(GONE);
+        mapView.map().setMapPosition(Place.CHAPEL.latitude(), Place.CHAPEL.longitude(), 1 << 15);
+        loadSelectors();
+
+    }
+
+    private void loadSelectors() {
+        routeLayout.setVisibility(View.VISIBLE);
+        loadStartSelectors();
+
+    }
+
+    private void loadEndSelectors(final ArrayList<Place> originPlaces, int position) {
+        // originPlaces.remove(position);
+        String[] ITEMS = new String[originPlaces.size()];
+        for (int i = 0; i < originPlaces.size(); i++) {
+            ITEMS[i] = originPlaces.get(i).placeName();
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ITEMS);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        endSpinner.setAdapter(adapter);
+        final int[] times = {0};
+        endSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (times[0] == 0) {
+                    times[0]++;
+
+                } else {
+                    GeoPoint geopoint = new GeoPoint(originPlaces.get(position).latitude(), originPlaces.get(position).longitude());
+                    onLongPress(geopoint, false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void loadStartSelectors() {
+        final ArrayList<Place> originPlaces = router.getPlaces();
+        String[] ITEMS = new String[originPlaces.size()];
+        for (int i = 0; i < originPlaces.size(); i++) {
+            ITEMS[i] = originPlaces.get(i).placeName();
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ITEMS);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        startSpinner.setAdapter(adapter);
+        final int[] times = {0};
+        startSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (times[0] == 0) {
+                    times[0]++;
+
+                } else {
+                    loadEndSelectors(originPlaces, position);
+                    GeoPoint geopoint = new GeoPoint(originPlaces.get(position).latitude(), originPlaces.get(position).longitude());
+                    onLongPress(geopoint, true);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     void loadGraphStorage() {
@@ -449,23 +565,29 @@ public class NavigationActivity extends AppCompatActivity {
                         put(Routing.INSTRUCTIONS, "false");
                 GHResponse resp = hopper.route(req);
                 time = sw.stop().getSeconds();
-                return resp.getBest();
+                PathWrapper wrapper = new PathWrapper();
+                if (!resp.getBest().getPoints().isEmpty()) wrapper = resp.getBest();
+                return wrapper;
             }
 
             protected void onPostExecute(PathWrapper resp) {
-                if (!resp.hasErrors()) {
-                    log("from:" + fromLat + "," + fromLon + " to:" + toLat + ","
-                            + toLon + " found path with distance:" + resp.getDistance()
-                            / 1000f + ", nodes:" + resp.getPoints().getSize() + ", time:"
-                            + time + " " + resp.getDebugInfo());
-                    logUser("the route is " + (int) (resp.getDistance() / 100) / 10f
-                            + "km long, time:" + resp.getTime() / 60000f + "min, debug:" + time);
-
-                    pathLayer = createPathLayer(resp);
-                    mapView.map().layers().add(pathLayer);
-                    mapView.map().updateMap(true);
+                if (resp.getPoints().isEmpty()) {
+                    logUser("No route found");
                 } else {
-                    logUser("Error:" + resp.getErrors());
+                    if (!resp.hasErrors()) {
+                        log("from:" + fromLat + "," + fromLon + " to:" + toLat + ","
+                                + toLon + " found path with distance:" + resp.getDistance()
+                                / 1000f + ", nodes:" + resp.getPoints().getSize() + ", time:"
+                                + time + " " + resp.getDebugInfo());
+                        logUser("the route is " + (int) (resp.getDistance() / 100) / 10f
+                                + "km long, time:" + resp.getTime() / 60000f + "min, debug:" + time);
+
+                        pathLayer = createPathLayer(resp);
+                        mapView.map().layers().add(pathLayer);
+                        mapView.map().updateMap(true);
+                    } else {
+                        logUser("Error:" + resp.getErrors());
+                    }
                 }
                 shortestPathRunning = false;
             }

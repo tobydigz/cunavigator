@@ -1,69 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.oscim.android.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal">
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/welcome"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/welcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome to CU Campus Navigator!"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:id="@+id/settings_layout"
+
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="Local"/>
+
+            <Spinner
+                android:id="@+id/locale_area_spinner"
+                android:layout_width="180dp"
+                android:layout_height="60dp"
+                android:layout_weight="0.80"/>
+
+            <Button
+                android:id="@+id/locale_button"
+                android:layout_width="86dp"
+                android:layout_height="60dp"
+                android:text="OK"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="Remote"
+                android:visibility="gone"/>
+
+            <Spinner
+                android:id="@+id/remote_area_spinner"
+                android:layout_width="180dp"
+                android:layout_height="60dp"
+                android:layout_weight="0.80"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/remote_button"
+                android:layout_width="86dp"
+                android:layout_height="60dp"
+                android:text="Download"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/route_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Welcome to CU Campus Navigator!"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:text="Start"/>
+
+                <Spinner
+                    android:id="@+id/startSpinner"
+                    android:layout_width="180dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="0.80"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:text="End"/>
+
+                <Spinner
+                    android:id="@+id/endSpinner"
+                    android:layout_width="180dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="0.80"/>
+
+                <Button
+                    android:id="@+id/route_button"
+                    android:layout_width="86dp"
+                    android:layout_height="60dp"
+                    android:text="OK"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="Local"/>
-
-        <Spinner
-            android:id="@+id/locale_area_spinner"
-            android:layout_width="180dp"
-            android:layout_height="60dp"
-            android:layout_weight="0.80"/>
-
-        <Button
-            android:id="@+id/locale_button"
-            android:layout_width="86dp"
-            android:layout_height="60dp"
-            android:text="OK"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="Remote"/>
-
-        <Spinner
-            android:id="@+id/remote_area_spinner"
-            android:layout_width="180dp"
-            android:layout_height="60dp"
-            android:layout_weight="0.80"/>
-
-        <Button
-            android:id="@+id/remote_button"
-            android:layout_width="86dp"
-            android:layout_height="60dp"
-            android:text="Download"/>
-    </LinearLayout>
-
-</LinearLayout>
+</FrameLayout>

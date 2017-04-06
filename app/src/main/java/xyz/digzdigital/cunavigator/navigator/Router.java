@@ -4,12 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 
-import org.osmdroid.bonuspack.routing.GraphHopperRoadManager;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.Polyline;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,15 +18,14 @@ public class Router {
     private Place origin;
     private Place destination;
     private Context context;
-    private onRoute onRouteListener;
-    private RoadManager roadManager;
+    // private onRoute onRouteListener;
+    // private RoadManager roadManager;
 
-    public Router(Context context) {
-        this.context = context;
+    public Router() {
     }
 
     public ArrayList<Place> getPlaces() {
-        if (places == null || places.size() == 0) createPlaces();
+        createPlaces();
         return places;
     }
 
@@ -71,7 +65,7 @@ public class Router {
         places.add(Place.CUGH);
     }
 
-    public void setOrigin(Place origin) {
+    /*public void setOrigin(Place origin) {
         this.origin = origin;
     }
 
@@ -88,7 +82,7 @@ public class Router {
 
     public void routeWithGraphhopper(){
         // roadManager = new OSRMRoadManager(context);
-        roadManager = new GraphHopperRoadManager("7bbb6502-eb6c-49c9-92d1-7077796fd104", false);
+        // roadManager = new GraphHopperRoadManager("7bbb6502-eb6c-49c9-92d1-7077796fd104", false);
         ArrayList<GeoPoint> geoPoints = new ArrayList<>();
         geoPoints.add(new GeoPoint(origin.latitude(), origin.longitude()));
 
@@ -132,5 +126,5 @@ public class Router {
             Polyline polyline = RoadManager.buildRoadOverlay(road);
             computeRoute(polyline);
         }
-    }
+    }*/
 }
